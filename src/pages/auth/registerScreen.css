@@ -1,0 +1,49 @@
+.input-wrapper {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.input-with-icon {
+  padding-left: 35px;
+}
+
+.password-wrapper .eye-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4e73df; /* giống login */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.register-link {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+.register-error
+{
+  color: red;
+  margin-bottom: 10px;
+  text-align: center;
+}

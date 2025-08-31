@@ -1,0 +1,131 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb;
+  padding: 20px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 32px;
+  color: #3b82f6;
+}
+
+
+
+.password-wrapper {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+
+
+.eye-button {
+  position: absolute;
+  right: 5px;           /* cách mép phải ít hơn */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;       /* to hơn tí để dễ click */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;          /* thu nhỏ vùng nút */
+}
+
+
+.input,
+.login-button {
+  width: 100%;             /* cùng chiều rộng */
+  padding: 16px;           /* cùng padding */
+  font-size: 16px;         /* cùng font-size */
+  border-radius: 16px;     /* cùng bo góc */
+  border: 1px solid #d1d5db; /* đồng bộ border */
+  box-sizing: border-box;  /* đảm bảo width tính cả padding */
+}
+
+.login-button {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  border: none;            /* nút không hiển thị border */
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.login-button:hover {
+  background-color: #2563eb;
+}
+
+.forgot-password {
+  text-align: center;
+}
+
+.forgot-password a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+.register-link {
+  text-align: center;
+  margin-top: 16px;
+  display: flex;
+  justify-content: center; /* canh giữa cả dòng */
+  gap: 8px; /* khoảng cách giữa text và link */
+  font-size: 14px;
+}
+
+.register-text {
+  color: #374151;
+}
+
+.register-link-text {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-link-text:hover {
+  text-decoration: underline;
+}
+.input-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #9ca3af;
+}
+.input-wrapper .input {
+  padding-left: 40px; /* tạo khoảng trống cho icon */
+}
+.error-text {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
