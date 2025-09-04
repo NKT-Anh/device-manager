@@ -1,0 +1,35 @@
+.history-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.history-title {
+  margin-bottom: 20px;
+  color: #1976d2;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fafbfc;
+}
+
+.history-table th,
+.history-table td {
+  border: 1px solid #e0e0e0;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.history-table th {
+  background: #f0f4f8;
+  color: #333;
+}
+
+.history-table tr:nth-child(even) {
+  background: #f9f9f9;
+}

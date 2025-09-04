@@ -2,8 +2,11 @@ import React from "react";
 
 const HomeStaff = () => {
   return (
-    <div style={{ padding: 20, fontSize: 24, fontWeight: "bold" }}>
-      Trang chủ
+    <div>
+      <div style={{ fontSize: 24, fontWeight: "bold" }}>
+        Chào mừng bạn đến với trang nhân viên!
+      </div>
+      {/* Nội dung chính ở đây */}
     </div>
   );
 };
