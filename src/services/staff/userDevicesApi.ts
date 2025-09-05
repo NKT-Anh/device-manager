@@ -6,15 +6,15 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
+  where,
   serverTimestamp,
   updateDoc,
-  query,
-  orderBy ,
-  onSnapshot,
+  orderBy,
+  Query ,
 } from "firebase/firestore";
 
-const userDevicesCol = collection(db, "userDevices");
-
+export const userDevicesCol = collection(db, "userDevices");
 
 export const createUserDevice = async (data: {
   userName: string;
@@ -35,38 +35,28 @@ export const createUserDevice = async (data: {
     return { success: false, message: error.message };
   }
 };
-export const onUserDevicesRealtime = (
-  callback: (data: { id: string; [key: string]: any }[]) => void,
-  errorCallback?: (error: any) => void
-) => {
+
+
+export const getAllUserDevices = async (facilityId?: string) => {
   try {
+    let q: Query = userDevicesCol; 
 
-    const q = query(userDevicesCol, orderBy("createdAt", "desc"));
+    if (facilityId) {
+      q = query(userDevicesCol, where("facilityId", "==", facilityId), orderBy("createdAt", "desc"));
+    }
 
-  
-    const unsubscribe = onSnapshot(
-      q,
-      (snapshot) => {
-        const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        callback(list);
-      },
-      (error) => {
-        if (errorCallback) errorCallback(error);
-      }
-    );
+    const snapshot = await getDocs(q);
+    const list = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || null,
+        devices: data.devices || [],
+      };
+    });
 
-    return unsubscribe;
-  } catch (error: any) {
-    if (errorCallback) errorCallback(error);
-    return () => {};
-  }
-};
-
-
-export const getAllUserDevices = async () => {
-  try {
-    const snapshot = await getDocs(userDevicesCol);
-    const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     return { success: true, data: list };
   } catch (error: any) {
     return { success: false, message: error.message };
@@ -79,7 +69,17 @@ export const getUserDeviceById = async (id: string) => {
     if (!snap.exists()) {
       return { success: false, message: "Không tìm thấy" };
     }
-    return { success: true, data: { id: snap.id, ...snap.data() } };
+    const data = snap.data();
+    return {
+      success: true,
+      data: {
+        id: snap.id,
+        ...data,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || null,
+        devices: data.devices || [],
+      },
+    };
   } catch (error: any) {
     return { success: false, message: error.message };
   }

@@ -5,11 +5,14 @@ import HomeAdmin from "./pages/admin/homeAdmin";
 import HomeManager from "./pages/manager/homeManager";
 import HomeStaff from "./pages/staff/homeStaff";
 import LayoutStaff from "./pages/staff/layoutStaff";
+import ProfileScreen from "./pages/staff/profileScreen";
 import ReportsStaff from "./pages/staff/reportsStaff";
-import UsersStaff from "./pages/staff/usersStaff";
+import UsersStaff from "./pages/staff/usersStaff/usersStaff";
 import HistoryStaff from "./pages/staff/historyStaff";
+import { AuthProvider } from "./context/authContext";
 function App() {
   return (
+     <AuthProvider>
     <Router>
       <Routes>
         --- phần route của auth ----
@@ -34,12 +37,12 @@ function App() {
 
 
         --- phần route của staff ----
-              <Route path="/staff" element={<LayoutStaff />}>
+          <Route path="/staff" element={<LayoutStaff />}>
           <Route index element={<HomeStaff />} />
           {/* <Route path="tasks" element={<TasksPage />} /> */}
           {/* <Route path="devices" element={<DevicesPage />} /> */}
           <Route path="reports" element={<ReportsStaff />} />
-          <Route path="reports" element={<ReportsStaff />} />
+          <Route path="profile" element={<ProfileScreen />} />
           <Route path="users" element={<UsersStaff />} />
           <Route path="history" element={<HistoryStaff />} />
         </Route>
@@ -49,6 +52,7 @@ function App() {
 
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

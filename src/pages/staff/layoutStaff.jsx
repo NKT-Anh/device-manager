@@ -1,16 +1,8 @@
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { FaHome, FaTasks, FaDesktop, FaChartBar, FaUser, FaHistory } from "react-icons/fa";
-
-const sidebarStyle = (collapsed) => ({
-  width: collapsed ? 60 : 220,
-  background: "#f5f5f5",
-  height: "100vh",
-  padding: 20,
-  boxSizing: "border-box",
-  transition: "width 0.2s",
-  overflow: "hidden",
-});
+import { Outlet } from "react-router-dom";
+import StaffHeader from "./StaffHeader";
+import SidebarStaff from "./SidebarStaff";
+import { useAuth } from "../../context/authContext";
 
 const headerStyle = {
   height: 60,
@@ -23,6 +15,8 @@ const headerStyle = {
   fontWeight: "bold",
 };
 
+const layoutStyle = { display: "flex" };
+
 const contentStyle = {
   flex: 1,
   padding: 32,
@@ -30,24 +24,16 @@ const contentStyle = {
   minHeight: "calc(100vh - 60px)",
 };
 
-const layoutStyle = {
-  display: "flex",
-};
-
-const linkStyle = {
-  display: "block",
-  padding: "10px 0",
-  color: "#333",
-  textDecoration: "none",
-  fontWeight: 500,
-  whiteSpace: "nowrap",
-};
-
-const LayoutStaff = () => {
+export default function LayoutStaff() {
+  const { user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
-
+  
   return (
     <div>
+      {/* Header chính */}
+      <StaffHeader />
+
+      {/* Thanh header phụ với toggle sidebar */}
       <div style={headerStyle}>
         <button
           onClick={() => setCollapsed((c) => !c)}
@@ -59,39 +45,23 @@ const LayoutStaff = () => {
             border: "none",
             color: "#fff",
           }}
-          title={collapsed ? "Mở rộng menu" : "Thu gọn menu"}
         >
           {collapsed ? "☰" : "✖"}
         </button>
-        Trang chủ nhân viên 
+        Trang chủ nhân viên
       </div>
+
+      {/* Layout chính */}
       <div style={layoutStyle}>
-        <div style={sidebarStyle(collapsed)}>
-<Link to="/staff" style={linkStyle}>
-            <FaHome /> {!collapsed && "Trang chủ"}
-          </Link>
-          <Link to="/staff/tasks" style={linkStyle}>
-            <FaTasks /> {!collapsed && "Công việc"}
-          </Link>
-          <Link to="/staff/devices" style={linkStyle}>
-            <FaDesktop /> {!collapsed && "Thiết bị cơ sở"}
-          </Link>
-          <Link to="/staff/reports" style={linkStyle}>
-            <FaChartBar /> {!collapsed && "Báo cáo"}
-          </Link>
-          <Link to="/staff/users" style={linkStyle}>
-            <FaUser /> {!collapsed && "Người dùng"}
-          </Link>
-          <Link to="/staff/history" style={linkStyle}>
-            <FaHistory /> {!collapsed && "Lịch sử"}
-          </Link>
-        </div>
+        {/* Sidebar */}
+        <SidebarStaff collapsed={collapsed} />
+
+        {/* Nội dung chính */}
         <div style={contentStyle}>
-          <Outlet />
+          {/* Truyền facilityId xuống các route con */}
+          <Outlet context={{ facilityId: user?.facilityId }} />
         </div>
       </div>
     </div>
   );
-};
-
-export default LayoutStaff;
+}
