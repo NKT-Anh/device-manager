@@ -66,7 +66,7 @@ export default function LoginScreen() {
         </button>
 
         <div className="forgot-password">
-          <a href="#">Quên mật khẩu?</a>
+          <Link to="/forgot-password">Quên mật khẩu?</Link>
         </div>
         
         <div className="register-link">
