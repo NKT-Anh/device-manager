@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { FaHome, FaTasks, FaDesktop, FaChartBar, FaUser, FaHistory } from "react-icons/fa";
 
 const sidebarStyle = (collapsed) => ({
   width: collapsed ? 60 : 220,
@@ -62,16 +63,28 @@ const LayoutStaff = () => {
         >
           {collapsed ? "☰" : "✖"}
         </button>
-        Trang chủ nhân viên
+        Trang chủ nhân viên 
       </div>
       <div style={layoutStyle}>
         <div style={sidebarStyle(collapsed)}>
-          <Link to="/staff" style={linkStyle}>🏠 {!collapsed && "Trang chủ"}</Link>
-          <Link to="/staff/tasks" style={linkStyle}>📋 {!collapsed && "Công việc"}</Link>
-          <Link to="/staff/devices" style={linkStyle}>🖥️ {!collapsed && "Thiết bị cơ sở"}</Link>
-          <Link to="/staff/reports" style={linkStyle}>📊 {!collapsed && "Báo cáo"}</Link>
-          <Link to="/staff/users" style={linkStyle}>👤 {!collapsed && "Người dùng"}</Link>
-          <Link to="/staff/history" style={linkStyle}>🕑 {!collapsed && "Lịch sử"}</Link>
+<Link to="/staff" style={linkStyle}>
+            <FaHome /> {!collapsed && "Trang chủ"}
+          </Link>
+          <Link to="/staff/tasks" style={linkStyle}>
+            <FaTasks /> {!collapsed && "Công việc"}
+          </Link>
+          <Link to="/staff/devices" style={linkStyle}>
+            <FaDesktop /> {!collapsed && "Thiết bị cơ sở"}
+          </Link>
+          <Link to="/staff/reports" style={linkStyle}>
+            <FaChartBar /> {!collapsed && "Báo cáo"}
+          </Link>
+          <Link to="/staff/users" style={linkStyle}>
+            <FaUser /> {!collapsed && "Người dùng"}
+          </Link>
+          <Link to="/staff/history" style={linkStyle}>
+            <FaHistory /> {!collapsed && "Lịch sử"}
+          </Link>
         </div>
         <div style={contentStyle}>
           <Outlet />
