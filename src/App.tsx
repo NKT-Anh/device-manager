@@ -43,6 +43,12 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const location = useLocation();
   const isAuthRoute = location.pathname === '/' || location.pathname === '/register' || location.pathname === '/forgot-password';
+  let role: string | undefined;
+  try {
+    role = JSON.parse(localStorage.getItem('currentUser') || '{}')?.role;
+  } catch {}
+  const isManager = role === 'manager';
+  const showManagerShell = isManager && location.pathname.startsWith('/manager-home');
 
   const renderPage = () => {
     switch (currentPage) {
@@ -60,31 +66,29 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-      <Routes>
-          <Route path="/" element={<Loginscreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/admin-home" element={<HomeAdmin />} />
-          <Route path="/manager-home" element={<HomeManager />} />
-          <Route path="/staff-home" element={<HomeStaff />} />
-        </Routes>
-
-        {!isAuthRoute && (
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              pt: 8,
-              backgroundColor: '#f5f5f5',
-              minHeight: 'calc(100vh - 64px)'
-            }}
-          >
-            <ErrorBoundary>
-              <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
-              {renderPage()}
-            </ErrorBoundary>
-          </Box>
-        )}
+      {!isAuthRoute && isManager && (
+        <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+      )}
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          pt: !isAuthRoute && isManager ? 8 : 0,
+          backgroundColor: '#f5f5f5',
+          minHeight: 'calc(100vh - 64px)'
+        }}
+      >
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Loginscreen />} />
+            <Route path="/register" element={<RegisterScreen />} />
+            <Route path="/admin-home" element={<HomeAdmin />} />
+            <Route path="/manager-home" element={<HomeManager />} />
+            <Route path="/staff-home" element={<HomeStaff />} />
+          </Routes>
+          {showManagerShell && renderPage()}
+        </ErrorBoundary>
+      </Box>
     </ThemeProvider>
   );
 }

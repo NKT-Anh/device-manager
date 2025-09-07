@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -22,11 +22,25 @@ import {
   People as PeopleIcon,
   Home as HomeIcon
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { logoutUser } from '../../services/auth/firebaseApi';
 
 const Navigation = ({ currentPage, onPageChange }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [role, setRole] = useState('staff');
+
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem('currentUser');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.role) setRole(parsed.role);
+      }
+    } catch {}
+  }, []);
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
@@ -40,9 +54,9 @@ const Navigation = ({ currentPage, onPageChange }) => {
 
   const handlePageChange = (pageId) => {
     onPageChange(pageId);
-    if (isMobile) {
-      setMobileOpen(false);
-    }
+    // Bảo đảm chuyển vào vùng /manager-home để shell manager hiển thị
+    navigate('/manager-home');
+    if (isMobile) setMobileOpen(false);
   };
 
   const drawer = (
@@ -83,6 +97,11 @@ const Navigation = ({ currentPage, onPageChange }) => {
             </ListItemButton>
           </ListItem>
         ))}
+        <ListItem disablePadding>
+          <ListItemButton onClick={async () => { await logoutUser(); navigate('/'); }} sx={{ mx: 1, borderRadius: 1 }}>
+            <ListItemText primary="Đăng xuất" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -128,6 +147,19 @@ const Navigation = ({ currentPage, onPageChange }) => {
                   {item.label}
                 </Button>
               ))}
+              {role === 'manager' && (
+                <Button
+                  color="inherit"
+                  onClick={() => navigate('/admin-home')}
+                  sx={{
+                    backgroundColor: 'transparent',
+                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' },
+                  }}
+                >
+                  Quản lý tài khoản
+                </Button>
+              )}
+              <Button color="inherit" onClick={async () => { await logoutUser(); navigate('/'); }}>Đăng xuất</Button>
             </Box>
           )}
         </Toolbar>

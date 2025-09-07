@@ -142,14 +142,14 @@ const FacilityForm = ({
                     </MenuItem>
                     {staff
                       .filter(s => s.position === 'Facility Management')
-                      .map((staffMember) => (
-                        <MenuItem key={staffMember.id} value={staffMember.id}>
-                          {staffMember.name} ({staffMember.employeeId}) - {staffMember.department}
+                      .map((manager) => (
+                        <MenuItem key={manager.id} value={manager.id}>
+                          {manager.name} - {manager.employeeId}
                         </MenuItem>
                       ))}
                     {staff.filter(s => s.position === 'Facility Management').length === 0 && (
                       <MenuItem disabled>
-                        <em>Chưa có Manager nào. Vui lòng thêm Manager trong Quản lý Nhân viên.</em>
+                        <em>Chưa có nhân viên quản lý cơ sở nào.</em>
                       </MenuItem>
                     )}
                   </Select>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   collection, 
   doc, 
@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 
-export const useFacilities = () => {
+export const useFacilities = (searchTerm = '', page = 1, itemsPerPage = 5) => {
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -94,17 +94,46 @@ export const useFacilities = () => {
     }
   };
 
+  // Lọc facilities dựa trên searchTerm
+  const filteredFacilities = useMemo(() => {
+    if (!searchTerm.trim()) return facilities;
+    
+    const searchLower = searchTerm.toLowerCase();
+    return facilities.filter(facility => 
+      facility.name?.toLowerCase().includes(searchLower) ||
+      facility.address?.toLowerCase().includes(searchLower) ||
+      facility.phone?.toLowerCase().includes(searchLower)
+    );
+  }, [facilities, searchTerm]);
+
+  // Tính toán phân trang
+  const totalItems = filteredFacilities.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedFacilities = filteredFacilities.slice(startIndex, endIndex);
+
   useEffect(() => {
     fetchFacilities();
   }, []);
 
   return {
-    facilities,
+    facilities: paginatedFacilities,
+    allFacilities: facilities,
+    filteredFacilities,
     loading,
     error,
     addFacility,
     updateFacility,
     deleteFacility,
-    refetch: fetchFacilities
+    refetch: fetchFacilities,
+    pagination: {
+      currentPage: page,
+      totalPages,
+      totalItems,
+      itemsPerPage,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    }
   };
 };

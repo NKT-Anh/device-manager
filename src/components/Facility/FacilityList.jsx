@@ -17,35 +17,67 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
-  Alert
+  Alert,
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Phone as PhoneIcon,
-  LocationOn as LocationIcon
+  LocationOn as LocationIcon,
+  Search as SearchIcon,
+  Clear as ClearIcon
 } from '@mui/icons-material';
 import { useFacilities } from '../../hooks/useFacilities';
 import { useStaff } from '../../hooks/useStaff';
 import FacilityForm from './FacilityForm';
+import Pagination from '../Common/Pagination';
 
 const FacilityList = () => {
+  // State cho tìm kiếm và phân trang
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
   const { 
     facilities, 
     loading, 
     error, 
     addFacility, 
     updateFacility, 
-    deleteFacility 
-  } = useFacilities();
+    deleteFacility,
+    pagination
+  } = useFacilities(searchTerm, currentPage, itemsPerPage);
   
-  const { getStaffById } = useStaff();
+  const { staff } = useStaff();
 
   const [formOpen, setFormOpen] = useState(false);
   const [selectedFacility, setSelectedFacility] = useState(null);
   const [deleteDialog, setDeleteDialog] = useState({ open: false, facility: null });
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Xử lý tìm kiếm
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setCurrentPage(1);
+  };
+
+  // Xử lý phân trang
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset về trang đầu khi thay đổi số mục per page
+  };
 
   const handleOpenForm = (facility = null) => {
     setSelectedFacility(facility);
@@ -103,7 +135,7 @@ const FacilityList = () => {
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
         <Typography variant="h4" component="h1">
           Quản lý Cơ sở
         </Typography>
@@ -112,8 +144,38 @@ const FacilityList = () => {
           startIcon={<AddIcon />}
           onClick={() => handleOpenForm()}
         >
-          Thêm cơ sở
+          + THÊM CƠ SỞ
         </Button>
+      </Box>
+
+      {/* Search Bar */}
+      <Box sx={{ mb: 3 }}>
+        <TextField
+          fullWidth
+          placeholder="Tìm kiếm theo tên cơ sở, địa chỉ hoặc số điện thoại..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: searchTerm && (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="clear search"
+                  onClick={handleClearSearch}
+                  edge="end"
+                  size="small"
+                >
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{ maxWidth: 600 }}
+        />
       </Box>
 
       {/* Error Alert */}
@@ -163,10 +225,10 @@ const FacilityList = () => {
                 <TableCell>
                   {facility.managerId ? (
                     (() => {
-                      const manager = getStaffById(facility.managerId);
+                      const manager = staff.find(s => s.id === facility.managerId);
                       return manager ? (
                         <Chip 
-                          label={`${manager.name} (${manager.employeeId})`} 
+                          label={`${manager.name}`} 
                           size="small" 
                           color="primary"
                         />
@@ -211,7 +273,7 @@ const FacilityList = () => {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography variant="body1" color="text.secondary">
-                    Chưa có cơ sở nào
+                    {searchTerm ? 'Không tìm thấy cơ sở nào phù hợp' : 'Chưa có cơ sở nào'}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -219,6 +281,28 @@ const FacilityList = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Debug info - remove this later */}
+      {pagination && (
+        <Box sx={{ mb: 2, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
+          <Typography variant="body2">
+            Debug: Total items: {pagination.totalItems}, Total pages: {pagination.totalPages}, 
+            Current page: {pagination.currentPage}, Items per page: {pagination.itemsPerPage}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Pagination */}
+      {pagination && (
+        <Pagination
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+          totalItems={pagination.totalItems}
+          itemsPerPage={pagination.itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+        />
+      )}
 
       {/* Form Dialog */}
       {formOpen && (

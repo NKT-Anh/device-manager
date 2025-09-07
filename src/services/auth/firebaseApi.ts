@@ -1,8 +1,8 @@
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, serverTimestamp, setDoc,getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/firebaseConfig";
 
-type Role = "admin" | "manager" | "staff";
+type Role = "manager" | "staff";
 export const createUser = async (
   email: string,
   password: string,
@@ -50,5 +50,15 @@ export const loginUser = async (email: string, password: string) => {
     else if (error.code === "auth/invalid-email") message = "Email không hợp lệ";
 
     return { success: false, message };
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    try { localStorage.removeItem('currentUser'); } catch {}
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, message: error.message };
   }
 };
