@@ -76,9 +76,26 @@ const Dashboard = () => {
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
-      <Typography variant="h4" component="h1" sx={{ mb: 4, fontWeight: 'bold' }}>
+      <Typography variant="h4" component="h1" sx={{ mb: 2, fontWeight: 'bold' }}>
         Dashboard Quản lý Cơ sở
       </Typography>
+      <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+        <a href="#suppliers-section" style={{ textDecoration: 'none' }}>
+          <Box sx={{ px: 2, py: 1, bgcolor: 'primary.main', color: 'white', borderRadius: 2, cursor: 'pointer', fontWeight: 'bold' }}>
+            Nhà cung cấp
+          </Box>
+        </a>
+        <a href="#orders-section" style={{ textDecoration: 'none' }}>
+          <Box sx={{ px: 2, py: 1, bgcolor: 'success.main', color: 'white', borderRadius: 2, cursor: 'pointer', fontWeight: 'bold' }}>
+            Đơn hàng
+          </Box>
+        </a>
+        <a href="#notifications-section" style={{ textDecoration: 'none' }}>
+          <Box sx={{ px: 2, py: 1, bgcolor: 'warning.main', color: 'white', borderRadius: 2, cursor: 'pointer', fontWeight: 'bold' }}>
+            Thông báo
+          </Box>
+        </a>
+      </Box>
 
       {/* Stats Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -327,6 +344,109 @@ const Dashboard = () => {
                     Tất cả cơ sở đều đã có Manager
                   </Typography>
                 )}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Supplier & Orders Section */}
+      <Grid container spacing={3} sx={{ mt: 4 }} id="suppliers-section">
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom fontWeight="bold">
+                Quản lý Nhà cung cấp
+              </Typography>
+              {/* Danh sách nhà cung cấp mẫu */}
+              <Box sx={{ mt: 2 }}>
+                {[{
+                  id: 'sup1',
+                  name: 'Công ty ABC',
+                  contact: '0123456789',
+                  address: '123 Đường A, Quận B',
+                  devicesSupplied: 5
+                }, {
+                  id: 'sup2',
+                  name: 'Công ty XYZ',
+                  contact: '0987654321',
+                  address: '456 Đường X, Quận Y',
+                  devicesSupplied: 3
+                }].map(supplier => (
+                  <Box key={supplier.id} sx={{ mb: 2, p: 2, border: '1px solid', borderColor: 'grey.200', borderRadius: 2 }}>
+                    <Typography fontWeight="bold">{supplier.name}</Typography>
+                    <Typography variant="body2">Liên hệ: {supplier.contact}</Typography>
+                    <Typography variant="body2">Địa chỉ: {supplier.address}</Typography>
+                    <Typography variant="body2">Thiết bị đã cung cấp: {supplier.devicesSupplied}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6} id="orders-section">
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom fontWeight="bold">
+                Theo dõi Đơn hàng
+              </Typography>
+              {/* Đơn hàng mẫu */}
+              <Box sx={{ mt: 2 }}>
+                {[{
+                  orderId: 'order1',
+                  supplier: 'Công ty ABC',
+                  device: 'Laptop',
+                  quantity: 10,
+                  status: 'Đã nhận',
+                  createdAt: '2025-08-01'
+                }, {
+                  orderId: 'order2',
+                  supplier: 'Công ty XYZ',
+                  device: 'Monitor',
+                  quantity: 5,
+                  status: 'Đang giao',
+                  createdAt: '2025-08-15'
+                }].map(order => (
+                  <Box key={order.orderId} sx={{ mb: 2, p: 2, border: '1px solid', borderColor: 'grey.200', borderRadius: 2 }}>
+                    <Typography fontWeight="bold">{order.device} x {order.quantity}</Typography>
+                    <Typography variant="body2">Nhà cung cấp: {order.supplier}</Typography>
+                    <Typography variant="body2">Trạng thái: {order.status}</Typography>
+                    <Typography variant="body2">Ngày tạo: {order.createdAt}</Typography>
+                  </Box>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Notifications Section */}
+      <Grid container spacing={3} sx={{ mt: 4 }} id="notifications-section">
+        <Grid item xs={12}>
+          <Card>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom fontWeight="bold">
+                Thông báo hệ thống
+              </Typography>
+              {/* Thông báo mẫu */}
+              <Box sx={{ mt: 2 }}>
+                {[{
+                  id: 'noti1',
+                  title: 'Thiết bị hết hàng',
+                  message: 'Thiết bị Laptop đã hết hàng trong kho.',
+                  createdAt: '2025-09-01'
+                }, {
+                  id: 'noti2',
+                  title: 'Đơn hàng mới',
+                  message: 'Đã có đơn hàng mới từ Công ty XYZ.',
+                  createdAt: '2025-09-05'
+                }].map(noti => (
+                  <Box key={noti.id} sx={{ mb: 2, p: 2, border: '1px solid', borderColor: 'grey.200', borderRadius: 2 }}>
+                    <Typography fontWeight="bold">{noti.title}</Typography>
+                    <Typography variant="body2">{noti.message}</Typography>
+                    <Typography variant="caption" color="text.secondary">{noti.createdAt}</Typography>
+                  </Box>
+                ))}
               </Box>
             </CardContent>
           </Card>

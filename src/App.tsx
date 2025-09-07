@@ -4,7 +4,7 @@ import RegisterScreen from "./pages/auth/registerScreen";
 import HomeAdmin from "./pages/admin/homeAdmin";
 import HomeManager from "./pages/manager/homeManager";
 import HomeStaff from "./pages/staff/homeStaff";
-import React, { useState } from 'react';
+import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box } from '@mui/material';
@@ -13,6 +13,9 @@ import Dashboard from './pages/manager/Dashboard';
 import FacilityList from './components/Facility/FacilityList';
 import StaffList from './components/Staff/StaffList';
 import ErrorBoundary from './components/Layout/ErrorBoundary';
+import SuppliersPage from './pages/manager/SuppliersPage';
+import OrdersPage from './pages/manager/OrdersPage';
+import NotificationsPage from './pages/manager/NotificationsPage';
 
 const theme = createTheme({
   palette: {
@@ -40,51 +43,41 @@ const theme = createTheme({
 });
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('dashboard');
   const location = useLocation();
   const isAuthRoute = location.pathname === '/' || location.pathname === '/register' || location.pathname === '/forgot-password';
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard key="dashboard" />;
-      case 'facilities':
-        return <FacilityList key="facilities" />;
-      case 'staff':
-        return <StaffList key="staff" />;
-      default:
-        return <Dashboard key="dashboard-default" />;
-    }
-  };
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
       <Routes>
-          <Route path="/" element={<Loginscreen />} />
-          <Route path="/register" element={<RegisterScreen />} />
-          <Route path="/admin-home" element={<HomeAdmin />} />
-          <Route path="/manager-home" element={<HomeManager />} />
-          <Route path="/staff-home" element={<HomeStaff />} />
-        </Routes>
-
-        {!isAuthRoute && (
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              pt: 8,
-              backgroundColor: '#f5f5f5',
-              minHeight: 'calc(100vh - 64px)'
-            }}
-          >
-            <ErrorBoundary>
-              <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
-              {renderPage()}
-            </ErrorBoundary>
-          </Box>
-        )}
+        <Route path="/" element={<Loginscreen />} />
+        <Route path="/register" element={<RegisterScreen />} />
+        <Route path="/admin-home" element={<HomeAdmin />} />
+        <Route path="/manager-home" element={<HomeManager />} />
+        <Route path="/staff-home" element={<HomeStaff />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/facilities" element={<FacilityList />} />
+        <Route path="/staff" element={<StaffList />} />
+        <Route path="/suppliers" element={<SuppliersPage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+      </Routes>
+      {!isAuthRoute && (
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            pt: { xs: 7, md: 8 }, // Đảm bảo padding top đủ lớn cho cả mobile và desktop
+            backgroundColor: '#f5f5f5',
+            minHeight: 'calc(100vh - 64px)'
+          }}
+        >
+          <ErrorBoundary>
+            <Navigation />
+            {/* Nội dung trang sẽ được hiển thị qua <Routes> */}
+          </ErrorBoundary>
+        </Box>
+      )}
     </ThemeProvider>
   );
 }

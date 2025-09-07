@@ -20,29 +20,29 @@ import {
   Dashboard as DashboardIcon,
   Business as BusinessIcon,
   People as PeopleIcon,
-  Home as HomeIcon
+  Home as HomeIcon,
+  LocalShipping as LocalShippingIcon,
+  Notifications as NotificationsIcon
 } from '@mui/icons-material';
+import { Link, useLocation } from 'react-router-dom';
 
-const Navigation = ({ currentPage, onPageChange }) => {
+const Navigation = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const location = useLocation();
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon /> },
-    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon /> }
+    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+    { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon />, path: '/facilities' },
+    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon />, path: '/staff' },
+    { id: 'suppliers', label: 'Nhà cung cấp', icon: <BusinessIcon />, path: '/suppliers' },
+    { id: 'orders', label: 'Đơn hàng', icon: <LocalShippingIcon />, path: '/orders' },
+    { id: 'notifications', label: 'Thông báo', icon: <NotificationsIcon />, path: '/notifications' }
   ];
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const handlePageChange = (pageId) => {
-    onPageChange(pageId);
-    if (isMobile) {
-      setMobileOpen(false);
-    }
   };
 
   const drawer = (
@@ -59,8 +59,9 @@ const Navigation = ({ currentPage, onPageChange }) => {
         {menuItems.map((item) => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton
-              selected={currentPage === item.id}
-              onClick={() => handlePageChange(item.id)}
+              component={Link}
+              to={item.path}
+              selected={location.pathname === item.path}
               sx={{
                 mx: 1,
                 borderRadius: 1,
@@ -75,6 +76,7 @@ const Navigation = ({ currentPage, onPageChange }) => {
                   },
                 },
               }}
+              onClick={isMobile ? handleDrawerToggle : undefined}
             >
               <ListItemIcon>
                 {item.icon}
@@ -116,10 +118,11 @@ const Navigation = ({ currentPage, onPageChange }) => {
                 <Button
                   key={item.id}
                   color="inherit"
-                  onClick={() => handlePageChange(item.id)}
+                  component={Link}
+                  to={item.path}
                   startIcon={item.icon}
                   sx={{
-                    backgroundColor: currentPage === item.id ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    backgroundColor: location.pathname === item.path ? 'rgba(255,255,255,0.1)' : 'transparent',
                     '&:hover': {
                       backgroundColor: 'rgba(255,255,255,0.1)',
                     },
