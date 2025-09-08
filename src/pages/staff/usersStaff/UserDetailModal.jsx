@@ -24,10 +24,15 @@ const UserDetailModal = ({ user, onClose }) => {
           <span className="value">{user.role}</span>
         </div>
 
-        <div className="detail-item">
-          <span className="label">Thiết bị đang dùng:</span>
-          <span className="value">{user.devices?.join(", ") || "Không có"}</span>
-        </div>
+      <div className="detail-item">
+        <span className="label">Thiết bị đang dùng:</span>
+        <span className="value">
+            {user.devices
+            ?.filter(d => d.status !== "locked")
+            .map(d => d.deviceName)
+            .join(", ") || "Chưa có"}
+        </span>
+      </div>
 
         <div className="detail-item">
           <span className="label">Lý do sử dụng:</span>
