@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaHome, FaTasks, FaDesktop, FaChartBar, FaUser, FaHistory } from "react-icons/fa";
+import { FaHome, FaTasks, FaDesktop, FaChartBar, FaUser, FaHistory, FaBell } from "react-icons/fa";
 
 const sidebarStyle = (collapsed) => ({
   width: collapsed ? 60 : 220,
@@ -41,6 +41,9 @@ export default function SidebarStaff({ collapsed }) {
       </Link>
       <Link to="/staff/history" style={linkStyle}>
         <FaHistory /> {!collapsed && "Lịch sử"}
+      </Link>
+      <Link to="/staff/notifications" style={linkStyle}>
+        <FaBell /> {!collapsed && "Thông báo"}
       </Link>
     </div>
   );

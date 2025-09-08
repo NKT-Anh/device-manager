@@ -9,6 +9,8 @@ import ProfileScreen from "./pages/staff/profileScreen";
 import ReportsStaff from "./pages/staff/reportsStaff";
 import UsersStaff from "./pages/staff/usersStaff/usersStaff";
 import HistoryStaff from "./pages/staff/historyStaff";
+import DevicesStaff from "./pages/staff/devicesStaff";
+import NotificationsStaff from "./pages/staff/notificationsStaff";
 import { AuthProvider } from "./context/authContext";
 function App() {
   return (
@@ -38,14 +40,14 @@ function App() {
 
         --- phần route của staff ----
           <Route path="/staff" element={<LayoutStaff />}>
-          <Route index element={<HomeStaff />} />
-          {/* <Route path="tasks" element={<TasksPage />} /> */}
-          {/* <Route path="devices" element={<DevicesPage />} /> */}
-          <Route path="reports" element={<ReportsStaff />} />
-          <Route path="profile" element={<ProfileScreen />} />
-          <Route path="users" element={<UsersStaff />} />
-          <Route path="history" element={<HistoryStaff />} />
-        </Route>
+            <Route index element={<HomeStaff />} />
+            <Route path="devices" element={<DevicesStaff />} />
+            <Route path="reports" element={<ReportsStaff />} />
+            <Route path="profile" element={<ProfileScreen />} />
+            <Route path="users" element={<UsersStaff />} />
+            <Route path="history" element={<HistoryStaff />} />
+            <Route path="notifications" element={<NotificationsStaff />} />
+          </Route>
 
 
 
