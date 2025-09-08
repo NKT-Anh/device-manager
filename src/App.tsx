@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Loginscreen from "./pages/auth/loginScreen";
 import RegisterScreen from "./pages/auth/registerScreen";
 import HomeAdmin from "./pages/admin/homeAdmin";
@@ -48,6 +48,29 @@ function AppContent() {
   const { desktopOpen } = useSidebar();
   const isAuthRoute = location.pathname === '/' || location.pathname === '/register' || location.pathname === '/forgot-password';
 
+  const getCurrentRole = (): "manager" | "staff" | null => {
+    try {
+      const cached = localStorage.getItem('currentUser');
+      if (!cached) return null;
+      const parsed = JSON.parse(cached);
+      return parsed?.role ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const ProtectedRoute = ({ element, allowedRoles }: { element: React.ReactElement; allowedRoles: Array<"manager" | "staff"> }) => {
+    const role = getCurrentRole();
+    if (!role) {
+      return <Navigate to="/" replace />;
+    }
+    if (!allowedRoles.includes(role)) {
+      // Redirect user to their appropriate home if they hit a forbidden route
+      return <Navigate to={role === 'manager' ? '/manager-home' : '/staff-home'} replace />;
+    }
+    return element;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -58,29 +81,31 @@ function AppContent() {
         </Routes>
       ) : (
         <>
-          <ErrorBoundary>
-            <Navigation />
-          </ErrorBoundary>
+          {getCurrentRole() !== 'staff' && (
+            <ErrorBoundary>
+              <Navigation />
+            </ErrorBoundary>
+          )}
           <Box
             component="main"
             sx={{
-              pt: { xs: 7, md: 8 },
-              ml: { xs: 0, md: desktopOpen ? '280px' : 0 },
+              pt: getCurrentRole() === 'staff' ? 2 : { xs: 7, md: 8 },
+              ml: getCurrentRole() === 'staff' ? 0 : { xs: 0, md: desktopOpen ? '280px' : 0 },
               backgroundColor: '#f5f5f5',
               minHeight: 'calc(100vh - 64px)',
               transition: 'margin-left 0.3s ease',
             }}
           >
             <Routes>
-              <Route path="/admin-home" element={<HomeAdmin />} />
-              <Route path="/manager-home" element={<HomeManager />} />
-              <Route path="/staff-home" element={<HomeStaff />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/facilities" element={<FacilityList />} />
-              <Route path="/staff" element={<StaffList />} />
-              <Route path="/suppliers" element={<SuppliersPage />} />
-              <Route path="/orders" element={<OrdersPage />} />
-              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/admin-home" element={<ProtectedRoute element={<HomeAdmin />} allowedRoles={["manager"]} />} />
+              <Route path="/manager-home" element={<ProtectedRoute element={<HomeManager />} allowedRoles={["manager"]} />} />
+              <Route path="/staff-home" element={<ProtectedRoute element={<HomeStaff />} allowedRoles={["staff"]} />} />
+              <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={["manager"]} />} />
+              <Route path="/facilities" element={<ProtectedRoute element={<FacilityList />} allowedRoles={["manager"]} />} />
+              <Route path="/staff" element={<ProtectedRoute element={<StaffList />} allowedRoles={["manager"]} />} />
+              <Route path="/suppliers" element={<ProtectedRoute element={<SuppliersPage />} allowedRoles={["manager"]} />} />
+              <Route path="/orders" element={<ProtectedRoute element={<OrdersPage />} allowedRoles={["manager"]} />} />
+              <Route path="/notifications" element={<ProtectedRoute element={<NotificationsPage />} allowedRoles={["manager"]} />} />
             </Routes>
           </Box>
         </>

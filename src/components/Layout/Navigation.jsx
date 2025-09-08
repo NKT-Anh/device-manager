@@ -46,13 +46,17 @@ const Navigation = () => {
     } catch {}
   }, []);
 
-  const menuItems = [
+  const managerMenuItems = [
     { id: 'dashboard', label: 'Thống kê', icon: <DashboardIcon />, path: '/dashboard' },
     { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon />, path: '/facilities' },
     { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon />, path: '/staff' },
     { id: 'suppliers', label: 'Nhà cung cấp', icon: <BusinessIcon />, path: '/suppliers' },
     { id: 'orders', label: 'Đơn hàng', icon: <LocalShippingIcon />, path: '/orders' },
     { id: 'notifications', label: 'Thông báo', icon: <NotificationsIcon />, path: '/notifications' }
+  ];
+
+  const staffMenuItems = [
+    { id: 'home', label: 'Trang nhân viên', icon: <HomeIcon />, path: '/staff-home' }
   ];
 
   const handleDrawerToggle = () => {
@@ -80,7 +84,7 @@ const Navigation = () => {
       {/* Navigation Menu */}
       <Box sx={{ flexGrow: 1, p: 1 }}>
         <List>
-          {menuItems.map((item) => (
+          {(role === 'manager' ? managerMenuItems : staffMenuItems).map((item) => (
             <ListItem key={item.id} disablePadding sx={{ mb: 0.5 }}>
               <ListItemButton
                 component={Link}
