@@ -33,14 +33,17 @@ export default function SidebarStaff({ collapsed }) {
       <Link to="/staff/devices" style={linkStyle}>
         <FaDesktop /> {!collapsed && "Thiết bị cơ sở"}
       </Link>
-      <Link to="/staff/reports" style={linkStyle}>
+      <Link to="/staff/deviceReportsScreen" style={linkStyle}>
         <FaChartBar /> {!collapsed && "Báo cáo"}
       </Link>
-      <Link to="/staff/users" style={linkStyle}>
+      <Link to="/staff/panelUseDevice" style={linkStyle}>
         <FaUser /> {!collapsed && "Người dùng"}
       </Link>
       <Link to="/staff/history" style={linkStyle}>
         <FaHistory /> {!collapsed && "Lịch sử"}
+      </Link>
+      <Link to="/staff/historyStaff" style={linkStyle}>
+        <FaChartBar /> {!collapsed && "Panel"}
       </Link>
     </div>
   );

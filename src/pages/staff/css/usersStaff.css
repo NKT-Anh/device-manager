@@ -209,3 +209,90 @@ input, select, textarea {
   text-align: center;
   color: #1976d2;
 }
+/* gợi ý autocomplete */
+.suggestions-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 4px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  list-style: none;
+  padding: 0;
+}
+
+.suggestions-box li {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.suggestions-box li:hover {
+  background: #f0f4ff;
+}
+
+/* chip thiết bị đã chọn */
+.selected-devices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* .device-chip {
+  background: #1976d2;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+} */
+.btn-add-device {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0px 0px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: 60px;
+  height: 40px;
+}
+.btn-add-device:hover {
+  background: #43a047;
+}
+
+
+.device-chip {
+  position: relative;
+  display: inline-block;
+  background: #1976d2;
+  border-radius: 16px;
+  padding: 6px 12px;
+  margin: 4px;
+  font-size: 14px;
+}
+
+.device-chip .chip-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.device-chip .chip-remove:hover {
+  background: darkred;
+}

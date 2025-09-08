@@ -9,7 +9,11 @@ import ProfileScreen from "./pages/staff/profileScreen";
 import ReportsStaff from "./pages/staff/reportsStaff";
 import UsersStaff from "./pages/staff/usersStaff/usersStaff";
 import HistoryStaff from "./pages/staff/historyStaff";
+import DeviceHistory from "./pages/staff/deviceHistory";
 import { AuthProvider } from "./context/authContext";
+import PanelUseDevice from "./pages/staff/usersStaff/panelUseDevice";
+import DeviceReportsScreen from "./pages/staff/DeviceReportsScreen";
+
 function App() {
   return (
      <AuthProvider>
@@ -41,10 +45,11 @@ function App() {
           <Route index element={<HomeStaff />} />
           {/* <Route path="tasks" element={<TasksPage />} /> */}
           {/* <Route path="devices" element={<DevicesPage />} /> */}
-          <Route path="reports" element={<ReportsStaff />} />
+          <Route path="deviceReportsScreen" element={<DeviceReportsScreen />} />
           <Route path="profile" element={<ProfileScreen />} />
-          <Route path="users" element={<UsersStaff />} />
-          <Route path="history" element={<HistoryStaff />} />
+          <Route path="panelUseDevice" element={<PanelUseDevice />} />
+          <Route path="history" element={<DeviceHistory />} />
+          <Route path="historyStaff" element={<HistoryStaff />} />
         </Route>
 
 
