@@ -3,7 +3,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Box,
   Drawer,
   List,
@@ -20,16 +19,21 @@ import {
   Dashboard as DashboardIcon,
   Business as BusinessIcon,
   People as PeopleIcon,
-  Home as HomeIcon
+  Home as HomeIcon,
+  LocalShipping as LocalShippingIcon,
+  Notifications as NotificationsIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../services/auth/firebaseApi';
+import { useSidebar } from '../../context/SidebarContext';
 
-const Navigation = ({ currentPage, onPageChange }) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const Navigation = () => {
+  const { desktopOpen, setDesktopOpen, mobileOpen, setMobileOpen } = useSidebar();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const location = useLocation();
   const [role, setRole] = useState('staff');
 
   useEffect(() => {
@@ -43,66 +47,156 @@ const Navigation = ({ currentPage, onPageChange }) => {
   }, []);
 
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <DashboardIcon /> },
-    { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon /> },
-    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon /> }
+    { id: 'dashboard', label: 'Thống kê', icon: <DashboardIcon />, path: '/dashboard' },
+    { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon />, path: '/facilities' },
+    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon />, path: '/staff' },
+    { id: 'suppliers', label: 'Nhà cung cấp', icon: <BusinessIcon />, path: '/suppliers' },
+    { id: 'orders', label: 'Đơn hàng', icon: <LocalShippingIcon />, path: '/orders' },
+    { id: 'notifications', label: 'Thông báo', icon: <NotificationsIcon />, path: '/notifications' }
   ];
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    if (isMobile) {
+      setMobileOpen(!mobileOpen);
+    } else {
+      setDesktopOpen(!desktopOpen);
+    }
   };
-
-  const handlePageChange = (pageId) => {
-    onPageChange(pageId);
-    // Bảo đảm chuyển vào vùng /manager-home để shell manager hiển thị
-    navigate('/manager-home');
-    if (isMobile) setMobileOpen(false);
-  };
-
   const drawer = (
-    <Box sx={{ width: 250 }}>
-      <Toolbar>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <HomeIcon color="primary" />
-          <Typography variant="h6" noWrap component="div" fontWeight="bold">
-            Manager
+    <Box sx={{ width: 280, height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <HomeIcon color="primary" sx={{ fontSize: 24 }} />
+          <Typography variant="h6" fontWeight="bold" color="primary" noWrap>
+            Quản lý thiết bị
           </Typography>
         </Box>
-      </Toolbar>
-      <List>
-        {menuItems.map((item) => (
-          <ListItem key={item.id} disablePadding>
-            <ListItemButton
-              selected={currentPage === item.id}
-              onClick={() => handlePageChange(item.id)}
-              sx={{
-                mx: 1,
-                borderRadius: 1,
-                '&.Mui-selected': {
-                  backgroundColor: 'primary.main',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'primary.dark',
-                  },
-                  '& .MuiListItemIcon-root': {
+        <Typography variant="body2" color="text.secondary" noWrap>
+          Hệ thống quản lý CNTT
+        </Typography>
+      </Box>
+
+      {/* Navigation Menu */}
+      <Box sx={{ flexGrow: 1, p: 1 }}>
+        <List>
+          {menuItems.map((item) => (
+            <ListItem key={item.id} disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                selected={location.pathname === item.path}
+                sx={{
+                  borderRadius: 2,
+                  mx: 1,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
                     color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
                   },
-                },
-              }}
-            >
-              <ListItemIcon>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                }}
+                onClick={isMobile ? handleDrawerToggle : undefined}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText 
+                  primary={item.label} 
+                  primaryTypographyProps={{ 
+                    fontSize: '0.9rem',
+                    fontWeight: location.pathname === item.path ? 600 : 400
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+          
+          {/* Admin Section - moved here */}
+          {role === 'manager' && (
+            <ListItem disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                onClick={() => {
+                  navigate('/admin-home');
+                  if (isMobile) handleDrawerToggle();
+                }}
+                selected={location.pathname === '/admin-home'}
+                sx={{
+                  borderRadius: 2,
+                  mx: 1,
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
+                    },
+                    '& .MuiListItemIcon-root': {
+                      color: 'white',
+                    },
+                  },
+                  '&:hover': {
+                    backgroundColor: 'action.hover',
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40 }}>
+                  <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Quản lý tài khoản" 
+                  primaryTypographyProps={{ 
+                    fontSize: '0.9rem',
+                    fontWeight: location.pathname === '/admin-home' ? 600 : 400
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )}
+        </List>
+      </Box>
+
+      {/* Logout Section */}
+      <Box sx={{ p: 1, borderTop: '1px solid', borderColor: 'divider' }}>
         <ListItem disablePadding>
-          <ListItemButton onClick={async () => { await logoutUser(); navigate('/'); }} sx={{ mx: 1, borderRadius: 1 }}>
-            <ListItemText primary="Đăng xuất" />
+          <ListItemButton 
+            onClick={async () => { 
+              try {
+                await logoutUser(); 
+                navigate('/'); 
+              } catch (error) {
+                console.error('Logout error:', error);
+              }
+            }} 
+            sx={{ 
+              borderRadius: 2,
+              mx: 1,
+              backgroundColor: 'error.main',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'error.dark',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40, color: 'white' }}>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Đăng xuất" 
+              primaryTypographyProps={{ 
+                fontSize: '0.9rem',
+                fontWeight: 600
+              }}
+            />
           </ListItemButton>
         </ListItem>
-      </List>
+      </Box>
     </Box>
   );
 
@@ -110,58 +204,28 @@ const Navigation = ({ currentPage, onPageChange }) => {
     <>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          {isMobile && (
+          {/* Left side - Toggle button and Logo */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               color="inherit"
-              aria-label="open drawer"
+              aria-label="toggle drawer"
               edge="start"
               onClick={handleDrawerToggle}
               sx={{ mr: 2 }}
             >
               <MenuIcon />
             </IconButton>
-          )}
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
-            <HomeIcon />
-            <Typography variant="h6" noWrap component="div" fontWeight="bold">
-              Quản lý thiết bị CNTT
-            </Typography>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <HomeIcon sx={{ fontSize: 24 }} />
+              <Typography variant="h6" noWrap component="div" fontWeight="bold">
+                Quản lý thiết bị CNTT
+              </Typography>
+            </Box>
           </Box>
 
-          {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              {menuItems.map((item) => (
-                <Button
-                  key={item.id}
-                  color="inherit"
-                  onClick={() => handlePageChange(item.id)}
-                  startIcon={item.icon}
-                  sx={{
-                    backgroundColor: currentPage === item.id ? 'rgba(255,255,255,0.1)' : 'transparent',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    },
-                  }}
-                >
-                  {item.label}
-                </Button>
-              ))}
-              {role === 'manager' && (
-                <Button
-                  color="inherit"
-                  onClick={() => navigate('/admin-home')}
-                  sx={{
-                    backgroundColor: 'transparent',
-                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' },
-                  }}
-                >
-                  Quản lý tài khoản
-                </Button>
-              )}
-              <Button color="inherit" onClick={async () => { await logoutUser(); navigate('/'); }}>Đăng xuất</Button>
-            </Box>
-          )}
+          {/* Right side - Empty space */}
+          <Box sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
 
@@ -171,11 +235,38 @@ const Navigation = ({ currentPage, onPageChange }) => {
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 250 },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
+        }}
+      >
+        {drawer}
+      </Drawer>
+
+      {/* Desktop Drawer */}
+      <Drawer
+        variant="persistent"
+        open={desktopOpen}
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          width: desktopOpen ? 280 : 0,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 280,
+            boxSizing: 'border-box',
+            position: 'fixed',
+            top: 64, // Height of AppBar
+            left: 0,
+            height: 'calc(100vh - 64px)',
+            transition: theme.transitions.create('width', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            overflowX: 'hidden',
+            zIndex: theme.zIndex.drawer,
+          },
         }}
       >
         {drawer}
