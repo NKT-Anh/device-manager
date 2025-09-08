@@ -11,12 +11,22 @@ import { Box } from '@mui/material';
 import Navigation from './components/Layout/Navigation';
 import Dashboard from './pages/manager/Dashboard';
 import FacilityList from './components/Facility/FacilityList';
+import InventoryPage from './components/Equipment/InventoryPage';
 import StaffList from './components/Staff/StaffList';
 import ErrorBoundary from './components/Layout/ErrorBoundary';
 import SuppliersPage from './pages/manager/SuppliersPage';
 import OrdersPage from './pages/manager/OrdersPage';
 import NotificationsPage from './pages/manager/NotificationsPage';
 import { SidebarProvider, useSidebar } from './context/SidebarContext';
+import { AuthProvider } from './context/authContext';
+import LayoutStaff from "./pages/staff/layoutStaff";
+import ProfileScreen from "./pages/staff/profileScreen";
+import ReportsStaff from "./pages/staff/reportsStaff";
+import UsersStaff from "./pages/staff/usersStaff/usersStaff";
+import HistoryStaff from "./pages/staff/historyStaff";
+import DeviceHistory from "./pages/staff/deviceHistory";
+import PanelUseDevice from "./pages/staff/usersStaff/panelUseDevice";
+import DeviceReportsScreen from "./pages/staff/DeviceReportsScreen";
 
 const theme = createTheme({
   palette: {
@@ -99,13 +109,28 @@ function AppContent() {
             <Routes>
               <Route path="/admin-home" element={<ProtectedRoute element={<HomeAdmin />} allowedRoles={["manager"]} />} />
               <Route path="/manager-home" element={<ProtectedRoute element={<HomeManager />} allowedRoles={["manager"]} />} />
-              <Route path="/staff-home" element={<ProtectedRoute element={<HomeStaff />} allowedRoles={["staff"]} />} />
+              {/* Optional: keep staff-home to redirect to the new layout if someone hits old URL */}
+              <Route path="/staff-home" element={<ProtectedRoute element={<Navigate to="/staff" replace />} allowedRoles={["staff"]} />} />
               <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={["manager"]} />} />
               <Route path="/facilities" element={<ProtectedRoute element={<FacilityList />} allowedRoles={["manager"]} />} />
-              <Route path="/staff" element={<ProtectedRoute element={<StaffList />} allowedRoles={["manager"]} />} />
+              <Route path="/employees" element={<ProtectedRoute element={<StaffList />} allowedRoles={["manager"]} />} />
               <Route path="/suppliers" element={<ProtectedRoute element={<SuppliersPage />} allowedRoles={["manager"]} />} />
               <Route path="/orders" element={<ProtectedRoute element={<OrdersPage />} allowedRoles={["manager"]} />} />
               <Route path="/notifications" element={<ProtectedRoute element={<NotificationsPage />} allowedRoles={["manager"]} />} />
+              <Route path="/inventory" element={<ProtectedRoute element={<InventoryPage />} allowedRoles={["manager"]} />} />
+              {/* Nested staff routes from other branch, behind staff role */}
+              <Route path="/staff" element={<ProtectedRoute element={<LayoutStaff />} allowedRoles={["staff"]} />}>
+                <Route index element={<HomeStaff />} />
+                <Route path="tasks" element={<div style={{ padding: 20 }}>Trang công việc</div>} />
+                <Route path="devices" element={<div style={{ padding: 20 }}>Trang thiết bị cơ sở</div>} />
+                <Route path="deviceReportsScreen" element={<DeviceReportsScreen />} />
+                <Route path="profile" element={<ProfileScreen />} />
+                <Route path="panelUseDevice" element={<PanelUseDevice />} />
+                <Route path="history" element={<DeviceHistory />} />
+                <Route path="historyStaff" element={<HistoryStaff />} />
+                <Route path="users" element={<UsersStaff />} />
+                <Route path="reports" element={<ReportsStaff />} />
+              </Route>
             </Routes>
           </Box>
         </>
@@ -116,9 +141,11 @@ function AppContent() {
 
 function App() {
   return (
-    <SidebarProvider>
-      <AppContent />
-    </SidebarProvider>
+    <AuthProvider>
+      <SidebarProvider>
+        <AppContent />
+      </SidebarProvider>
+    </AuthProvider>
   );
 }
 

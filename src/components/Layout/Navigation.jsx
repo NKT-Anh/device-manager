@@ -49,7 +49,8 @@ const Navigation = () => {
   const managerMenuItems = [
     { id: 'dashboard', label: 'Thống kê', icon: <DashboardIcon />, path: '/dashboard' },
     { id: 'facilities', label: 'Quản lý Cơ sở', icon: <BusinessIcon />, path: '/facilities' },
-    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon />, path: '/staff' },
+    { id: 'staff', label: 'Quản lý Nhân viên', icon: <PeopleIcon />, path: '/employees' },
+    { id: 'inventory', label: 'Kho thiết bị', icon: <BusinessIcon />, path: '/inventory' },
     { id: 'suppliers', label: 'Nhà cung cấp', icon: <BusinessIcon />, path: '/suppliers' },
     { id: 'orders', label: 'Đơn hàng', icon: <LocalShippingIcon />, path: '/orders' },
     { id: 'notifications', label: 'Thông báo', icon: <NotificationsIcon />, path: '/notifications' }

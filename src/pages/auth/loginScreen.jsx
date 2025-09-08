@@ -21,7 +21,7 @@ export default function LoginScreen() {
       const role = res.user.role;
       try { localStorage.setItem('currentUser', JSON.stringify(res.user)); } catch {}
       if (role === "manager") navigate("/manager-home");
-      else navigate("/staff-home");
+      else navigate("/staff");
     } else {
       setError(res.message);
     }
