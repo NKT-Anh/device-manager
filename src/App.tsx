@@ -24,6 +24,8 @@ import ProfileScreen from "./pages/staff/profileScreen";
 import ReportsStaff from "./pages/staff/reportsStaff";
 import UsersStaff from "./pages/staff/usersStaff/usersStaff";
 import HistoryStaff from "./pages/staff/historyStaff";
+import DevicesStaff from "./pages/staff/devicesStaff";
+import NotificationsStaff from "./pages/staff/notificationsStaff";
 import DeviceHistory from "./pages/staff/deviceHistory";
 import PanelUseDevice from "./pages/staff/usersStaff/panelUseDevice";
 import DeviceReportsScreen from "./pages/staff/DeviceReportsScreen";
@@ -122,8 +124,9 @@ function AppContent() {
               <Route path="/staff" element={<ProtectedRoute element={<LayoutStaff />} allowedRoles={["staff"]} />}>
                 <Route index element={<HomeStaff />} />
                 <Route path="tasks" element={<div style={{ padding: 20 }}>Trang công việc</div>} />
-                <Route path="devices" element={<div style={{ padding: 20 }}>Trang thiết bị cơ sở</div>} />
+                <Route path="devices" element={<DevicesStaff />} />
                 <Route path="deviceReportsScreen" element={<DeviceReportsScreen />} />
+                <Route path="notifications" element={<NotificationsStaff />} />
                 <Route path="profile" element={<ProfileScreen />} />
                 <Route path="panelUseDevice" element={<PanelUseDevice />} />
                 <Route path="history" element={<DeviceHistory />} />
